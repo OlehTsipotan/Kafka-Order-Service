@@ -3,9 +3,12 @@ package com.service.order.avro.converter;
 import com.service.order.avro.model.AvroOrder;
 import com.service.order.model.Order;
 import lombok.NonNull;
+import org.modelmapper.Condition;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
+
+import java.util.UUID;
 
 @Component
 public class OrderToAvroOrderConverter implements Converter<Order, AvroOrder> {
@@ -15,12 +18,20 @@ public class OrderToAvroOrderConverter implements Converter<Order, AvroOrder> {
 
     public OrderToAvroOrderConverter() {
         this.modelMapper = new ModelMapper();
+
+        org.modelmapper.Converter<UUID, CharSequence> uuidCharSequenceConverter =
+                categoryList -> categoryList.getSource().toString();
+
+        Condition notNull = ctx -> ctx.getSource() != null;
+
+        modelMapper.typeMap(Order.class, AvroOrder.class).addMappings(modelMapper -> {
+            modelMapper.when(notNull).using(uuidCharSequenceConverter).map(Order::getId, AvroOrder::setId);
+        });
     }
 
     @Override
     public AvroOrder convert(@NonNull Order source) {
         AvroOrder avroOrder = modelMapper.map(source, AvroOrder.class);
-        avroOrder.setId(source.getId().toString());
         return avroOrder;
     }
 }

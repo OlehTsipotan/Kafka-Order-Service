@@ -1,5 +1,7 @@
 package com.service.order.avro.converter;
 
+import com.service.order.avro.model.AvroOrder;
+import com.service.order.avro.model.AvroProduct;
 import com.service.order.model.Order;
 import com.service.order.model.OrderStatus;
 import com.service.order.model.Product;
@@ -8,11 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 
-import java.text.spi.CollatorProvider;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class OrderToAvroOrderConverterTest {
 
@@ -25,8 +25,24 @@ public class OrderToAvroOrderConverterTest {
 
     @ParameterizedTest
     @NullSource
-    public void convert_whenCarDTOIsNull_throwIllegalArgumentException(Order order) {
+    public void convert_whenOrderIsNull_throwIllegalArgumentException(Order order) {
         assertThrows(IllegalArgumentException.class, () -> converter.convert(order));
+    }
+
+    @Test
+    public void convert_whenOrderFieldsAreNull_success() {
+        Order order = new Order();
+
+
+        AvroOrder avroOrder = converter.convert(order);
+
+        assertNotNull(avroOrder);
+        AvroProduct avroProduct = avroOrder.getProduct();
+        assertNull(avroProduct);
+        assertEquals(avroOrder.getId(), order.getId());
+        assertEquals(avroOrder.getCustomerId(), order.getCustomerId());
+        assertEquals(avroOrder.getStatus(), order.getStatus());
+        assertEquals(avroOrder.getSource(), order.getSource());
     }
 
     @Test
@@ -50,8 +66,19 @@ public class OrderToAvroOrderConverterTest {
         order.setSource(source);
         order.setCustomerId(customerId);
 
-        System.out.println(converter.convert(order));
-        assertEquals(1, 2);
+        AvroOrder avroOrder = converter.convert(order);
+
+        assertNotNull(avroOrder);
+        AvroProduct avroProduct = avroOrder.getProduct();
+
+        assertNotNull(avroProduct);
+        assertEquals(avroOrder.getId().toString(), order.getId().toString());
+        assertEquals(avroOrder.getCustomerId(), order.getCustomerId());
+        assertEquals(avroOrder.getStatus().toString(), order.getStatus().toString());
+        assertEquals(avroOrder.getSource(), order.getSource());
+        assertEquals(avroProduct.getId(), productId);
+        assertEquals(avroProduct.getPrice(), productPrice);
+        assertEquals(avroProduct.getQuantity(), productQuantity);
     }
 
 }
