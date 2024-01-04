@@ -1,0 +1,33 @@
+package com.service.order.service;
+
+import com.service.order.avro.converter.OrderToAvroOrderConverter;
+import com.service.order.avro.model.AvroOrder;
+import com.service.order.model.Order;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+
+import java.util.UUID;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class KafkaOrderProducerService {
+
+    private final KafkaTemplate<String, AvroOrder> template;
+
+    private final OrderToAvroOrderConverter converter;
+
+    @Value("${kafka.order.topic}")
+    private String topic;
+
+    public void sendOrder(@NonNull Order order) {
+        AvroOrder avroOrder = converter.convert(order);
+        this.template.send(topic, String.valueOf(avroOrder.getId()), avroOrder);
+    }
+
+
+}
