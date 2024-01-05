@@ -12,10 +12,10 @@ import java.util.List;
 
 @Component
 @Slf4j
-public class NewOrderValidator extends ModelValidator<OrderDto> {
+public class OrderDtoValidator extends ModelValidator<OrderDto> {
 
 
-    public NewOrderValidator(Validator validator) {
+    public OrderDtoValidator(Validator validator) {
         super(validator);
     }
 
