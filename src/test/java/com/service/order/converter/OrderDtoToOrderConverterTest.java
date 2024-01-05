@@ -1,6 +1,5 @@
 package com.service.order.converter;
 
-import com.service.order.avro.converter.OrderToAvroOrderConverter;
 import com.service.order.dto.OrderDto;
 import com.service.order.dto.ProductDto;
 import com.service.order.model.Order;
@@ -11,10 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.NullSource;
 
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class OrderDtoToOrderConverterTest {
 
@@ -27,31 +24,55 @@ public class OrderDtoToOrderConverterTest {
 
     @ParameterizedTest
     @NullSource
-    public void convert_whenCarDTOIsNull_throwIllegalArgumentException(OrderDto orderDto) {
+    public void convert_whenOrderDtoIsNull_throwIllegalArgumentException(OrderDto orderDto) {
         assertThrows(IllegalArgumentException.class, () -> converter.convert(orderDto));
     }
 
     @Test
+    public void convert_whenOrderDtoFieldsAreNull_success() {
+        OrderDto orderDto = new OrderDto();
+
+        Order order = converter.convert(orderDto);
+
+        assertNotNull(order);
+        Product product = order.getProduct();
+        assertNull(product);
+        assertEquals(orderDto.getCustomerId(), order.getCustomerId());
+        assertEquals(orderDto.getSource(), order.getSource());
+    }
+
+    @Test
     public void convert_success() {
-        UUID uuidToSet = UUID.randomUUID();
-        Long customerId = 1L;
-        String source = "Source";
-        Long productId = 1L;
-        Integer productQuantity = 1;
-        Long productPrice = 100L;
+        Long productDtoId = 1L;
+        Integer productDtoQuantity = 1;
+        Long productDtoPrice = 1L;
 
         ProductDto productDto = new ProductDto();
-        productDto.setId(productId);
-        productDto.setQuantity(productQuantity);
-        productDto.setPrice(productPrice);
+        productDto.setId(productDtoId);
+        productDto.setQuantity(productDtoQuantity);
+        productDto.setPrice(productDtoPrice);
 
-        OrderDto order = new OrderDto();
-        order.setProductDto(productDto);
-        order.setSource(source);
-        order.setCustomerId(customerId);
+        String orderDtoSource = "someSource";
+        Long orderDtoCustomerId = 1L;
 
-        System.out.println(converter.convert(order));
-        assertEquals(1, 2);
+        OrderDto orderDto = new OrderDto();
+        orderDto.setProductDto(productDto);
+        orderDto.setSource(orderDtoSource);
+        orderDto.setCustomerId(orderDtoCustomerId);
+
+        Order order = converter.convert(orderDto);
+        assertNotNull(order);
+
+        Product product = order.getProduct();
+        assertNotNull(product);
+
+        assertNotNull(order.getId());
+        assertEquals(order.getCustomerId(), orderDtoCustomerId);
+        assertEquals(order.getStatus(), OrderStatus.NEW);
+        assertEquals(product.getId(), productDtoId);
+        assertEquals(product.getQuantity(), productDtoQuantity);
+        assertEquals(product.getPrice(), productDtoPrice);
+        assertEquals(order.getSource(), orderDtoSource);
     }
 
 }
