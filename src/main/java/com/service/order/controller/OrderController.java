@@ -5,6 +5,7 @@ import com.service.order.model.Order;
 import com.service.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,6 +17,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public Order create(@RequestBody OrderDto orderDto) {
         log.info("Received: " + orderDto);
         return orderService.create(orderDto);
