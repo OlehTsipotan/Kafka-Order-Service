@@ -16,12 +16,12 @@ public class OrderService {
 
     private final KafkaOrderProducerService kafkaOrderProducerService;
 
-    private final OrderDtoValidator newOrderValidator;
+    private final OrderDtoValidator orderDtoValidator;
 
     private final OrderDtoToOrderConverter converter;
 
     public Order create(@NonNull OrderDto orderDTO) {
-        newOrderValidator.validate(orderDTO);
+        orderDtoValidator.validate(orderDTO);
         Order order = converter.convert(orderDTO);
 
         kafkaOrderProducerService.sendOrder(order);
