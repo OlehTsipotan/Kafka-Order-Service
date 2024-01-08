@@ -2,15 +2,15 @@ package com.service.order.service;
 
 import com.service.order.avro.converter.OrderToAvroOrderConverter;
 import com.service.order.avro.model.AvroOrder;
+import com.service.order.exception.ServiceException;
 import com.service.order.model.Order;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.KafkaException;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 @Slf4j
@@ -26,8 +26,10 @@ public class KafkaOrderProducerService {
 
     public void sendOrder(@NonNull Order order) {
         AvroOrder avroOrder = converter.convert(order);
-        this.template.send(topic, String.valueOf(avroOrder.getId()), avroOrder);
+        try {
+            this.template.send(topic, String.valueOf(avroOrder.getId()), avroOrder);
+        } catch (KafkaException e) {
+            throw new ServiceException("Error sending order to Kafka", e);
+        }
     }
-
-
 }
