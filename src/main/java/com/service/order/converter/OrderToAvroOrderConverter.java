@@ -1,6 +1,6 @@
-package com.service.order.avro.converter;
+package com.service.order.converter;
 
-import com.service.order.avro.model.AvroOrder;
+import com.domain.avro.model.AvroOrder;
 import com.service.order.model.Order;
 import lombok.NonNull;
 import org.modelmapper.Condition;
