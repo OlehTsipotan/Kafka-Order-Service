@@ -31,7 +31,6 @@ public class OrderToAvroOrderConverter implements Converter<Order, AvroOrder> {
 
     @Override
     public AvroOrder convert(@NonNull Order source) {
-        AvroOrder avroOrder = modelMapper.map(source, AvroOrder.class);
-        return avroOrder;
+        return modelMapper.map(source, AvroOrder.class);
     }
 }
