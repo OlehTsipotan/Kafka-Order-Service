@@ -1,7 +1,7 @@
 package com.service.order.service;
 
-import com.service.order.avro.converter.OrderToAvroOrderConverter;
-import com.service.order.avro.model.AvroOrder;
+import com.service.order.converter.OrderToAvroOrderConverter;
+import com.domain.avro.model.AvroOrder;
 import com.service.order.exception.ServiceException;
 import com.service.order.model.Order;
 import lombok.NonNull;
@@ -28,6 +28,7 @@ public class KafkaOrderProducerService {
         AvroOrder avroOrder = converter.convert(order);
         try {
             this.template.send(topic, String.valueOf(avroOrder.getId()), avroOrder);
+            log.info("Order sent to Kafka: {}", avroOrder);
         } catch (KafkaException e) {
             throw new ServiceException("Error sending order to Kafka", e);
         }
