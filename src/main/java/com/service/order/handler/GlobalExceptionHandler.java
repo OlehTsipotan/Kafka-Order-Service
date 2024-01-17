@@ -15,13 +15,12 @@ import java.time.Instant;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-//    @ExceptionHandler(RuntimeException.class)
-//    @ResponseStatus(HttpStatus.BAD_GATEWAY)
-//    public ErrorResponse handleRuntimeException(RuntimeException e) {
-//        log.error(e.);
-//        return ErrorResponse.builder(e, HttpStatus.BAD_GATEWAY, e.getMessage()).title("Runtime Exception")
-//                .property("timestamp", Instant.now()).build();
-//    }
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.BAD_GATEWAY)
+    public ErrorResponse handleRuntimeException(RuntimeException e) {
+        return ErrorResponse.builder(e, HttpStatus.BAD_GATEWAY, e.getMessage()).title("Runtime Exception")
+                .property("timestamp", Instant.now()).build();
+    }
 
     @ExceptionHandler(ServiceException.class)
     @ResponseStatus(HttpStatus.BAD_GATEWAY)
