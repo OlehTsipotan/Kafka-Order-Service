@@ -26,7 +26,7 @@ public class OrderDtoValidatorTest {
     }
 
     @Test
-    public void validate_whenCarIsValid() {
+    public void validate_whenOrderIsValid() {
         OrderDto orderDto = new OrderDto();
         ProductDto productDto = new ProductDto();
         productDto.setId(1L);
@@ -41,7 +41,7 @@ public class OrderDtoValidatorTest {
 
     @ParameterizedTest
     @NullSource
-    public void validate_whenCarIsNull_throwIllegalArgumentException(OrderDto orderDto) {
+    public void validate_whenOrderIsNull_throwIllegalArgumentException(OrderDto orderDto) {
         assertThrows(IllegalArgumentException.class, () -> validator.validate(orderDto));
     }
 }
