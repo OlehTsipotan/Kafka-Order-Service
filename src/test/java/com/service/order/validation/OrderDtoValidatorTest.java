@@ -2,6 +2,7 @@ package com.service.order.validation;
 
 import com.service.order.dto.OrderDto;
 import com.service.order.dto.ProductDto;
+import com.service.order.exception.ValidationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +38,20 @@ public class OrderDtoValidatorTest {
         orderDto.setSource("someSource");
 
         assertDoesNotThrow(() -> validator.validate(orderDto));
+    }
+
+    @Test
+    public void validate_whenOrderIsInvalid() {
+        OrderDto orderDto = new OrderDto();
+        ProductDto productDto = new ProductDto();
+        productDto.setId(1L);
+        productDto.setPrice(1L);
+        productDto.setQuantity(1);
+        orderDto.setProductDto(productDto);
+        orderDto.setCustomerId(1L);
+        orderDto.setSource("");
+
+        assertThrows(ValidationException.class, () -> validator.validate(orderDto));
     }
 
     @ParameterizedTest
