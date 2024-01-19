@@ -171,7 +171,6 @@ public class KafkaOrderProducerServiceIntegrationTest {
         public OrderToAvroOrderConverter orderToAvroOrderConverter() {
             return new OrderToAvroOrderConverter();
         }
-
     }
 }
 
