@@ -135,7 +135,7 @@ public class KafkaOrderProducerServiceIntegrationTest {
     static class KafkaTestContainersConfiguration {
 
         @Bean
-        public KafkaConsumer<String, GenericRecord> kafkaConsumer() {
+        public KafkaConsumer<String, GenericRecord> testKafkaConsumer() {
             Properties props = new Properties();
 
             props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA.getBootstrapServers());
@@ -152,7 +152,7 @@ public class KafkaOrderProducerServiceIntegrationTest {
         }
 
         @Bean
-        public ProducerFactory<String, AvroOrder> producerFactory() {
+        public ProducerFactory<String, AvroOrder> testProducerFactory() {
             Map<String, Object> configProps = new HashMap<>();
             configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA.getBootstrapServers());
             configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -163,12 +163,12 @@ public class KafkaOrderProducerServiceIntegrationTest {
         }
 
         @Bean
-        public KafkaTemplate<String, AvroOrder> kafkaTemplate() {
-            return new KafkaTemplate<>(producerFactory());
+        public KafkaTemplate<String, AvroOrder> testKafkaTemplate() {
+            return new KafkaTemplate<>(testProducerFactory());
         }
 
         @Bean
-        public OrderToAvroOrderConverter orderToAvroOrderConverter() {
+        public OrderToAvroOrderConverter testOrderToAvroOrderConverter() {
             return new OrderToAvroOrderConverter();
         }
     }
