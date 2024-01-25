@@ -7,6 +7,8 @@ import com.service.order.exception.ValidationException;
 import com.service.order.model.Order;
 import com.service.order.service.OrderService;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -53,6 +55,15 @@ public class OrderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(null)))
                 .andExpect(status().isBadRequest());
+
+        verifyNoInteractions(orderService);
+    }
+
+    @ParameterizedTest
+    @NullSource
+    public void create_whenCustomerDTOIsNull_statusIsBadRequest(OrderDto orderDto) throws Exception {
+        mockMvc.perform(post("/orders").contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(orderDto))).andExpect(status().isBadRequest());
 
         verifyNoInteractions(orderService);
     }
