@@ -1,7 +1,7 @@
 package com.service.order.service;
 
 import com.service.order.converter.OrderToAvroOrderConverter;
-import com.domain.avro.model.AvroOrder;
+import com.service.avro.model.AvroOrder;
 import com.service.order.exception.ServiceException;
 import com.service.order.model.Order;
 import lombok.NonNull;

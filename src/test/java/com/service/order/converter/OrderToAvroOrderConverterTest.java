@@ -1,7 +1,7 @@
 package com.service.order.converter;
 
-import com.domain.avro.model.AvroOrder;
-import com.domain.avro.model.AvroProduct;
+import com.service.avro.model.AvroOrder;
+import com.service.avro.model.AvroProduct;
 import com.service.order.model.Order;
 import com.service.order.model.OrderStatus;
 import com.service.order.model.Product;
