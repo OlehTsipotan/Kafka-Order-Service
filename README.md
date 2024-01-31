@@ -60,27 +60,11 @@ Order communication schema:
     - [Docker](https://www.docker.com/) - A platform for developing, shipping, and running applications.
 
 ## How to Install and Run the Project
-### Prerequisites:
+### Go back to the [***Spring Kafka Order System***](https://github.com/OlehTsipotan/Spring-Kafka-Order-System)
 
-- Installed Docker
+> ### Documentation
+> - [Swagger UI](http://localhost:8080/swagger-ui.html) -> `http://localhost:8080/swagger-ui.html`
 
-### Installing
-- Clone the repo
-
-```sh
-git clone --recurse-submodules git@github.com:OlehTsipotan/Spring-Kafka-Order-System.git
-```
-
-### Running
-- Run out the box by Docker Compose
-```sh
-docker-compose --profile prod up 
-```
-3. Have fun!
-   The application will be accessible at
-- http://localhost:8080 **Order Service**
-- http://localhost:8082 **Payment Service**
-- http://localhost:8083 **Stock Service**
 
 ## Credits
 Oleh Tsipotan - developer (https://www.linkedin.com/in/oleh-tsipotan/)
