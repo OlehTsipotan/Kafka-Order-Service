@@ -17,9 +17,9 @@ public class AvroOrderStreamProcessor {
         if (stockOrder.getStatus() == AvroOrderStatus.ACCEPT &&
                 paymentOrder.getStatus() == AvroOrderStatus.ACCEPT) {
             stockOrder.setStatus(AvroOrderStatus.CONFIRMATION);
-        } else if (stockOrder.getStatus() == AvroOrderStatus.REJECT &&
+        } else if (stockOrder.getStatus() == AvroOrderStatus.REJECT ||
                 paymentOrder.getStatus() == AvroOrderStatus.REJECT) {
-            stockOrder.setStatus(AvroOrderStatus.ROLLBACK);;
+            stockOrder.setStatus(AvroOrderStatus.ROLLBACK);
         } else {
             log.info("Unexpected status for stock order: {} and payment order: {}", stockOrder, paymentOrder);
             stockOrder.setStatus(AvroOrderStatus.ROLLBACK);
