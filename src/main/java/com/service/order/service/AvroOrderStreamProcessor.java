@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class AvroOrderStreamProcessor {
 
-    public AvroOrder process(AvroOrder stockOrder, AvroOrder paymentOrder) {
+    public AvroOrder process(AvroOrder paymentOrder, AvroOrder stockOrder) {
         log.info("Processing stock order: {} and payment order: {}", stockOrder, paymentOrder);
         if (stockOrder.getStatus() == AvroOrderStatus.ACCEPT &&
                 paymentOrder.getStatus() == AvroOrderStatus.ACCEPT) {
