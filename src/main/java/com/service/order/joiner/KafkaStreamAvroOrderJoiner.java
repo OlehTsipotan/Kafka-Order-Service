@@ -1,18 +1,20 @@
-package com.service.order.service;
+package com.service.order.joiner;
 
 import com.service.avro.model.AvroOrder;
 import com.service.avro.model.AvroOrderStatus;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
+import org.apache.kafka.streams.kstream.ValueJoiner;
+import org.springframework.stereotype.Component;
 
 /**
- * Created by olehtsipotan on 03.02.2024.
+ * Created by olehtsipotan on 07.02.2024.
  */
-@Service
 @Slf4j
-public class AvroOrderStreamProcessor {
+@Component
+public class KafkaStreamAvroOrderJoiner implements ValueJoiner<AvroOrder, AvroOrder, AvroOrder> {
 
-    public AvroOrder process(AvroOrder paymentOrder, AvroOrder stockOrder) {
+    @Override
+    public AvroOrder apply(AvroOrder paymentOrder, AvroOrder stockOrder) {
         log.info("Processing stock order: {} and payment order: {}", stockOrder, paymentOrder);
         if (stockOrder.getStatus() == AvroOrderStatus.ACCEPT &&
                 paymentOrder.getStatus() == AvroOrderStatus.ACCEPT) {
@@ -26,6 +28,4 @@ public class AvroOrderStreamProcessor {
         }
         return stockOrder;
     }
-
-
 }

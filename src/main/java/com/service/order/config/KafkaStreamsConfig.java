@@ -1,11 +1,9 @@
 package com.service.order.config;
 
 import com.service.avro.model.AvroOrder;
-import com.service.order.service.AvroOrderStreamProcessor;
-import io.confluent.kafka.streams.serdes.avro.GenericAvroSerde;
+import com.service.order.joiner.KafkaStreamAvroOrderJoiner;
 import io.confluent.kafka.streams.serdes.avro.SpecificAvroSerde;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.avro.generic.GenericRecord;
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsBuilder;
@@ -36,7 +34,7 @@ public class KafkaStreamsConfig {
     private String schemaRegistryUrl;
 
     @Autowired
-    private AvroOrderStreamProcessor avroOrderStreamProcessor;
+    private KafkaStreamAvroOrderJoiner joiner;
 
     @Bean
     public Serde<AvroOrder> avroOrderSerde() {
@@ -53,8 +51,7 @@ public class KafkaStreamsConfig {
         KStream<String, AvroOrder> stream =
                 builder.stream("payment-orders", Consumed.with(Serdes.String(), avroOrderSerde));
 
-        stream.join(builder.stream("stock-orders"),
-                        avroOrderStreamProcessor::process,
+        stream.join(builder.stream("stock-orders"), joiner,
                         JoinWindows.of(Duration.ofSeconds(10)),
                         StreamJoined.with(Serdes.String(), avroOrderSerde, avroOrderSerde))
                 .peek((k, o) -> log.info("Output: {}", o)).to("orders");
