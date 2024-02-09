@@ -38,7 +38,7 @@ public class OrderControllerTest {
         OrderDto carDTO = new OrderDto();
         when(orderService.create(any(OrderDto.class))).thenReturn(order);
 
-        mockMvc.perform(post("/orders")
+        mockMvc.perform(post("/api/v1/orders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(carDTO)))
                 .andExpect(status().isCreated())
@@ -51,7 +51,7 @@ public class OrderControllerTest {
     @Test
     public void create_whenOrderDtoIsNull_statusIsBadRequest() throws Exception {
 
-        mockMvc.perform(post("/orders")
+        mockMvc.perform(post("/api/v1/orders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(null)))
                 .andExpect(status().isBadRequest());
@@ -62,7 +62,7 @@ public class OrderControllerTest {
     @ParameterizedTest
     @NullSource
     public void create_whenCustomerDTOIsNull_statusIsBadRequest(OrderDto orderDto) throws Exception {
-        mockMvc.perform(post("/orders").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/api/v1/orders").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(orderDto))).andExpect(status().isBadRequest());
 
         verifyNoInteractions(orderService);
@@ -74,7 +74,7 @@ public class OrderControllerTest {
 
         when(orderService.create(any(OrderDto.class))).thenThrow(new ValidationException(""));
 
-        mockMvc.perform(post("/orders")
+        mockMvc.perform(post("/api/v1/orders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(orderDto)))
                 .andExpect(status().isConflict());
@@ -89,7 +89,7 @@ public class OrderControllerTest {
 
         when(orderService.create(any(OrderDto.class))).thenThrow(ServiceException.class);
 
-        mockMvc.perform(post("/orders")
+        mockMvc.perform(post("/api/v1/orders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(orderDto)))
                 .andExpect(status().isBadGateway());
